@@ -1,0 +1,83 @@
+---
+
+# Root CA 
+- name: Enable root pki
+  shell: "vault secrets enable pki"  
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'
+  ignore_errors: yes
+  
+- name: Max ttl for root pki
+  shell: "vault secrets tune -max-lease-ttl={{ hc_vault.max_ttl }} pki"   
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'  
+  ignore_errors: yes    
+  
+- name: Create root Certificate
+  shell: "vault write -field=certificate pki/root/generate/internal common_name='Varsamis Certificate Authority' organization='VARSAMIS.LOCAL.HOME' ttl={{ hc_vault.max_ttl }} > CA_cert.crt"
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}' 
+  ignore_errors: yes        
+  
+- name: Set URLs for CRL
+  shell: "vault write pki/config/urls issuing_certificates='https://{{ inventory_hostname }}:8200/v1/pki/ca' crl_distribution_points='https://{{ inventory_hostname }}:8200/v1/pki/crl'"
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'    
+  ignore_errors: yes    
+  
+# Intermediate CA  
+- name: Create intermediate CA
+  shell: "vault secrets enable -path=pki_int pki"
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'  
+  ignore_errors: yes    
+  
+- name: Configure ttl for int_pki
+  shell: "vault secrets tune -max-lease-ttl=17520h pki_int"
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'  
+  ignore_errors: yes    
+  
+- name: Create csr for intermediate CA
+  shell: "vault write -format=json pki_int/intermediate/generate/internal common_name='Varsamis Intermediate Authority' ttl={{ hc_vault.max_ttl }} | jq -r '.data.csr' > pki_intermediate.csr"
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'  
+  ignore_errors: yes      
+
+- name: Create certificate for intermediate CA
+  shell: "vault write -format=json pki/root/sign-intermediate csr=@pki_intermediate.csr format=pem_bundle ttl={{ hc_vault.max_ttl }} | jq -r '.data.certificate' > intermediate.cert.pem"
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'  
+  ignore_errors: yes    
+    
+- name: Configure generated certificate
+  shell: "vault write pki_int/intermediate/set-signed certificate=@intermediate.cert.pem"
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'  
+  ignore_errors: yes    
+  
+- name: Set URLs for CRL
+  shell: "vault write pki_int/config/urls issuing_certificates='https://{{ inventory_hostname }}:8200/v1/pki_int/ca' crl_distribution_points='https://{{ inventory_hostname }}:8200/v1/pki_int/crl'"
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'    
+  ignore_errors: yes     
+  
+# Role  
+- name: Create role for intermediate CA
+  shell: "vault write pki_int/roles/local-home allowed_domains='local.home' allow_subdomains=true max_ttl={{ hc_vault.max_ttl }}"
+  environment:
+    VAULT_ADDR: 'http://{{ inventory_hostname }}:8200'
+    VAULT_TOKEN: '{{ hc_vault.root_token }}'  
+  ignore_errors: yes    
+    
+    

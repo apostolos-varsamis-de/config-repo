@@ -1,0 +1,18 @@
+---
+- name: Setup all hosts
+  hosts: hc_vault_hosts
+  roles:
+    - vault/01_base_tasks
+  tags: base_tasks
+  
+- name: Setup Consul Servers
+  hosts: consul_server_hosts
+  roles:
+    - vault/02_consul_server
+  tags: consul_server
+    
+- name: Setup Vault Servers
+  hosts: vault_server_hosts
+  roles:
+    - vault/03_vault_server
+  tags: vault_server

@@ -1,0 +1,22 @@
+ui = true
+
+listener "tcp" {
+    address = "0.0.0.0:8200"
+    cluster_address = "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:8201"
+    tls_disable = "false"
+    tls_cert_file = "/etc/vault/certs/vault.pem"
+    tls_key_file = "/etc/vault/certs/vault.key"    
+}
+
+storage "consul" {
+    address = "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:8501"
+    path = "vault/"
+    scheme = "https"
+    tls_ca_file = "/etc/vault/certs/CA.pem"
+    tls_cert_file = "/etc/vault/certs/vault.pem"
+    tls_key_file = "/etc/vault/certs/vault.key"
+
+}
+
+api_addr = "https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:8200"
+cluster_addr = "https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:8201"

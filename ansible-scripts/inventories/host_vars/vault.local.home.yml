@@ -1,0 +1,5 @@
+---
+
+keepalived_host:
+  state: MASTER
+  priority: 100

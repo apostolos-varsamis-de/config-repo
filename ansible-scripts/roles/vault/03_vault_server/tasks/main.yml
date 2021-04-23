@@ -1,0 +1,97 @@
+--- 
+# Consul Client Konfiguration
+- name: Copy client_agent.json
+  template:
+    src: client_agent.json.j2
+    dest: /usr/local/etc/consul/client_agent.json
+    owner: consul
+    group: consul
+    mode: 0660
+
+- name: Copy service file to hosts
+  template:
+    src: consul.service.j2
+    dest: /etc/systemd/system/consul.service
+    owner: consul
+    group: consul
+    mode: 0777      
+    
+- name: Enable consul service and start
+  systemd:
+    state: restarted
+    daemon_reload: yes    
+    name: consul
+
+# Ab hier Vault Installation
+
+- name: Create group for vault
+  group: 
+    name: vault
+    state: present
+  tags: entw_1
+        
+- name: Create vault user
+  user:
+    name: vault
+    comment: User for vault
+    state: present
+    group: vault
+  tags: entw_1
+        
+- name: Copy binary to Vault hosts
+  copy: 
+    src: /home/ubuntu/scripts/data/vault_1.6.3
+    dest: /usr/local/bin/vault
+    owner: vault
+    group: vault
+    mode: 0550
+  tags: entw_1
+  
+- name: Create folder for vault config
+  file:
+    path: /etc/vault/
+    state: directory   
+    owner: vault
+    group: vault 
+  tags: entw_1
+  
+- name: Copy vault_server.hcl
+  template:
+    src: vault_server.hcl.j2
+    dest: /etc/vault/vault_server.hcl
+    owner: vault
+    group: vault
+    mode: 0660
+  tags: entw_1  
+  
+- name: Copy service file to hosts
+  template:
+    src: vault.service.j2
+    dest: /etc/systemd/system/vault.service
+    owner: vault
+    group: vault
+    mode: 0777  
+  tags: entw_1
+  
+- name: Create folder for vault certs
+  file:
+    path: /etc/vault/certs/
+    state: directory   
+    owner: vault
+    group: vault 
+  tags: entw_1  
+  
+- name: Enable vault service and start
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes    
+    name: vault
+  tags: entw_1  
+  
+  
+    
+    
+    
+    
+    

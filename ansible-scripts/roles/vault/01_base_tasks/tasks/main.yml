@@ -1,0 +1,37 @@
+---
+# Installation und Basis Konfiguration Consul
+
+- name: Create group for consul
+  group: 
+    name: consul
+    state: present
+        
+- name: Create consul user
+  user:
+    name: consul
+    comment: User for consul database
+    state: present
+    group: consul    
+
+- name: Copy binary to Vault hosts
+  copy: 
+    src: /home/ubuntu/scripts/data/consul_1.9.4
+    dest: /usr/local/bin/consul
+    owner: consul
+    group: consul
+    mode: 0550
+    
+- name: Create folder for consul data
+  file:
+    path: /consul_data/
+    owner: consul
+    group: consul
+    state: directory    
+        
+- name: Create folder for config file
+  file:
+    path: /usr/local/etc/consul/
+    owner: consul
+    group: consul    
+    state: directory    
+      

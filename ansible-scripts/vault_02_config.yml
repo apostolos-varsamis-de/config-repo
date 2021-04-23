@@ -1,0 +1,9 @@
+---
+- name: Config Vault Servers
+  hosts: vault_config_host
+  roles:
+    - vault/04_config_vault
+  tags: config_vault_server
+
+
+

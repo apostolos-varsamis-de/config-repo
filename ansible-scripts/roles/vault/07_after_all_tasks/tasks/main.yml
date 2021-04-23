@@ -1,0 +1,13 @@
+---
+- name: Copy new certificates to truststore
+  copy:
+    src: cert/rootCA.pem
+    dest: /usr/local/share/ca-certificates/rootCA.pem 
+    
+- name: Copy new certificates to truststore
+  copy:
+    src: cert/CA.pem
+    dest: /usr/local/share/ca-certificates/CA.pem    
+    
+- name: Install certificates in Truststore
+  shell: "update-ca-certificates"

@@ -1,0 +1,22 @@
+---
+- name: Copy client_agent.json.j2 - now with ssl config
+  template:
+    src: client_agent.json.j2
+    dest: /usr/local/etc/consul/client_agent.json
+    owner: consul
+    group: consul
+    mode: 0660
+  
+- name: Enable consul service and start
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes    
+    name: consul
+    
+- name: Enable vault service and start
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes    
+    name: vault       

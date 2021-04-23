@@ -1,0 +1,27 @@
+{
+  "server": false,
+  "datacenter": "dc1",
+  "node_name": "{{ hostvars[inventory_hostname]['inventory_hostname_short'] }}",
+  "data_dir": "/consul_data/",
+  "bind_addr": "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}",
+  "client_addr": "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}",
+  "encrypt": "{{ hc_vault.encrypt_string }}",
+  "log_level": "{{ hc_vault.log_level }}",
+  "enable_syslog": true,
+  "leave_on_terminate": true,
+  "start_join": [{{ hc_vault.consul_server_list }}],
+  "verify_incoming": true,
+  "ca_file": "/usr/local/etc/consul/certs/CA.pem",
+  "key_file": "/usr/local/etc/consul/certs/consul.key",
+  "cert_file": "/usr/local/etc/consul/certs/consul.pem",
+  "acl": {
+    "enabled": true,
+    "tokens": {
+      "default": "{{ hc_vault.vault_consul_token }}"
+    }
+  },
+  "ports": {
+    "http": -1,
+    "https": 8501
+  }
+}

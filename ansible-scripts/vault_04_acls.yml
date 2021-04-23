@@ -1,0 +1,6 @@
+---
+- name: Activate ACLs in Consul Servers
+  hosts: consul_server_hosts
+  roles:
+    - vault/08_after_consul_servers
+  tags: ssl_consul

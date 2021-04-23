@@ -1,0 +1,17 @@
+---
+- name: Secure Vault with TLS-Encryption
+  hosts: consul_server_hosts
+  roles:
+    - vault/05_ssl_consul
+  tags: ssl_consul
+
+- name: Secure Vault with TLS-Encryption
+  hosts: vault_server_hosts
+  roles:
+    - vault/06_ssl_vault
+  tags: ssl_vault
+  
+- name: Install certificates to Truststore
+  hosts: hc_vault_hosts
+  roles:
+    - vault/07_after_all_tasks

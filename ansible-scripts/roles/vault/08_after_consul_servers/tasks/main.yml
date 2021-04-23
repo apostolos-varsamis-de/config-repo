@@ -1,0 +1,17 @@
+---
+- name: Copy server_agent.json
+  template:
+    src: server_agent.json.j2
+    dest: /usr/local/etc/consul/server_agent.json
+    owner: consul
+    group: consul
+    mode: 0660   
+  tags: copy_server_json 
+    
+- name: Enable consul service and start
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes    
+    name: consul
+  tags: copy_server_json   

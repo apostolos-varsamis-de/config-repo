@@ -1,0 +1,9 @@
+---
+hc_vault:
+  log_level: DEBUG
+  root_token: s.yNbvM6TEVHwmJqdAJQjLB3lG
+  encrypt_string: VRbV+8SeMBN+x6dZUFz19yZ89jI06faqeAxIaa6qwgw=
+  max_ttl: 87600h
+  consul_server_list: '"192.168.2.49"'
+  config_host: 192.168.2.50
+  vault_consul_token: 5301fbea-40f3-278d-2e9d-002e8a0644a4

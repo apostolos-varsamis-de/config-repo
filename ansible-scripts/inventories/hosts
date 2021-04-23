@@ -1,0 +1,33 @@
+[all_hosts]
+192.168.2.49
+192.168.2.50
+
+###############################################
+#                Vault Hosts                  #
+###############################################
+[hc_vault_hosts:children]
+consul_server_hosts
+vault_server_hosts
+
+[consul_server_hosts]
+consul.local.home
+
+[vault_server_hosts]
+vault.local.home
+
+[vault_config_host]
+vault.local.home
+
+
+###############################################
+#                 Bind DNS                    #
+###############################################
+[binddns_hosts]
+#bind-dns1.local.home
+#bind-dns2.local.home
+
+
+
+
+
+

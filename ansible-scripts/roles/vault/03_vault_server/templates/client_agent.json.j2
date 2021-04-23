@@ -1,0 +1,14 @@
+{
+  "server": false,
+  "datacenter": "dc1",
+  "node_name": "{{ hostvars[inventory_hostname]['inventory_hostname_short'] }}",
+  "data_dir": "/consul_data/",
+  "encrypt": "{{ hc_vault.encrypt_string }}",
+  "log_level": "{{ hc_vault.log_level }}",
+  "enable_syslog": true,
+  "leave_on_terminate": true,
+  "start_join": [
+{%- set comma = joiner(",") -%}
+{%- for host in groups['consul_server_hosts'] -%}{{ comma() }}"{{ hostvars[host]['ansible_default_ipv4']['address'] }}"
+{%- endfor -%}]
+}

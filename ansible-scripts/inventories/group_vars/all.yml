@@ -1,0 +1,8 @@
+---
+basis:
+  vault_ca_url: https://vault.local.home:8200/v1/pki/ca/pem
+  vault_ca_path_on_host: /usr/local/share/ca-certificates/rootCA.pem
+
+vault_ca:
+  host: https://vault.local.home:8200
+  general_ca: /v1/pki_int/issue/local-home

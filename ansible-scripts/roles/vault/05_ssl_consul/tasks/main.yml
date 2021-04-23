@@ -1,0 +1,48 @@
+---
+- name: Create folder for certs
+  file:
+    path: /usr/local/etc/consul/certs/
+    state: directory  
+    owner: consul
+    group: consul
+    
+- name: Copy consul key to hosts
+  copy:
+    src: cert/consul.key
+    dest: /usr/local/etc/consul/certs/consul.key
+    owner: consul
+    group: consul
+    mode: 0660
+    
+- name: Copy consul cert to hosts
+  copy:
+    src: cert/consul.pem
+    dest: /usr/local/etc/consul/certs/consul.pem
+    owner: consul
+    group: consul
+    mode: 0660  
+    
+- name: Copy consul cert to hosts
+  copy:
+    src: cert/CA.pem
+    dest: /usr/local/etc/consul/certs/CA.pem
+    owner: consul
+    group: consul
+    mode: 0660      
+    
+- name: Copy server_agent.json
+  template:
+    src: server_agent.json.j2
+    dest: /usr/local/etc/consul/server_agent.json
+    owner: consul
+    group: consul
+    mode: 0660   
+  tags: copy_server_json 
+    
+- name: Enable consul service and start
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes    
+    name: consul
+  tags: copy_server_json      
