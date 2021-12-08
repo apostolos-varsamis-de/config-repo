@@ -1,0 +1,33 @@
+- name: Ensure java installation
+  yum:
+    name: "{{ java.package }}"
+    state: present
+  tags: 
+    - java 
+    - java_installation
+
+- name: Resolve path to java
+  stat:
+    path: "{{ java.java_home }}"
+  register: alternatives_java
+  tags: 
+    - java 
+    - java_installation
+
+- name: Set JAVA_HOME
+  lineinfile:
+    path: /etc/profile
+    regexp: "^export JAVA_HOME"
+    line: "export JAVA_HOME={{ alternatives_java.stat.lnk_source }}"
+  tags: 
+    - java 
+    - java_installation
+
+- name: Set JRE_HOME
+  lineinfile:
+    path: /etc/profile
+    regexp: "^export JRE_HOME"
+    line: "export JRE_HOME={{ alternatives_java.stat.lnk_source }}/jre"
+  tags: 
+    - java 
+    - java_installation

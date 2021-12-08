@@ -1,0 +1,22 @@
+---
+- hosts: kafka_servers 
+  become: true
+  roles:
+    - firewall
+    - java
+
+- hosts: zk_servers 
+  become: true
+  roles:
+    - firewall
+    - java
+    - zookeeper
+
+
+- hosts: kafka_servers 
+  become: true
+  roles:
+    - kafka
+  tags: 
+    - kafka
+    - kafka_setup
