@@ -11,6 +11,8 @@ kafka_download_base_url: http://www-eu.apache.org/dist/kafka
 kafka_version: 2.8.1
 kafka_scala_version: 2.13
 
+kafka_plain_port: 9092
+
 # The kafka user and group to create files/dirs with and for running the kafka service
 kafka_create_user_group: true
 kafka_user: kafka
@@ -87,8 +89,8 @@ kafka_log_cleaner_threads: 1
 # The replication factor for the group metadata internal topics "__consumer_offsets" and "__transaction_state"
 # For anything other than development testing, a value greater than 1 is recommended for to ensure availability such as 3.
 kafka_offsets_topic_replication_factor: 1
-kafka_transaction_state_log_replication_factor: 1
-kafka_transaction_state_log_min_isr: 1
+kafka_transaction_state_log_replication_factor: 3
+kafka_transaction_state_log_min_isr: 2
 
 # The minimum age of a log file to be eligible for deletion
 kafka_log_retention_hours: 168

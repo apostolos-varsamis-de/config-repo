@@ -1,0 +1,41 @@
+---
+
+- debug:
+    msg: "check IO with topic {{ kafka.test_topic.topic_name }}"
+  tags: debug
+
+- name: Delete Topic {{ kafka.test_topic.topic_name }}, if exist
+  command: >
+    {{ kafka.path_to_bin }}/kafka-topics.sh
+    --bootstrap-server {{ kafka.bootstrap_servers }}
+    --delete
+    --topic {{ kafka.test_topic.topic_name }}
+    --if-exists
+
+- name: Create Topic {{ kafka.test_topic.topic_name }}
+  command: >
+    {{ kafka.path_to_bin }}/kafka-topics.sh
+    --bootstrap-server {{ kafka.bootstrap_servers }}
+    --create
+    --topic {{ kafka.test_topic.topic_name }}
+    --replication-factor {{ kafka.test_topic.replication }}
+    --partitions {{ kafka.test_topic.partitions }}
+
+- name: write into Topic {{ kafka.test_topic.topic_name }}
+  shell: >
+    echo "ansibletestevent" |
+    {{ kafka.path_to_bin }}/kafka-console-producer.sh
+    --bootstrap-server {{ kafka.bootstrap_servers }}
+    --topic {{ kafka.test_topic.topic_name }}
+  register: writeIntoTopic
+
+- name: read from Topic {{ kafka.test_topic.topic_name }}
+  command: >
+    {{ kafka.path_to_bin }}/kafka-console-consumer.sh
+    --bootstrap-server {{ kafka.bootstrap_servers }}
+    --topic {{ kafka.test_topic.topic_name }}
+    --from-beginning
+    --timeout-ms 10000
+  register: readFromTopic
+  failed_when: readFromTopic.stdout != "ansibletestevent"
+

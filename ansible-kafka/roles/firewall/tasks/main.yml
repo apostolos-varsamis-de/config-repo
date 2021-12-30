@@ -13,8 +13,10 @@
     state: enabled
     immediate: yes
   with_items:
-    - "{{ kafka.configuration.port }}"
+    - "{{ kafka_plain_port }}"
     - "{{ zookeeper_client_port }}"
+    - "{{ zookeeper_leader_port }}"
+    - "{{ zookeeper_election_port }}"
   tags:
     - firewall 
   notify: firewall restart

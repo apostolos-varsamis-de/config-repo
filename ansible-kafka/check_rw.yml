@@ -1,0 +1,7 @@
+---
+
+- name: seed Kafka topics
+  hosts: seed_host_kafka
+  roles:
+    - topics/check
+

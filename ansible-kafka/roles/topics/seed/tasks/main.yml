@@ -1,0 +1,28 @@
+---
+
+- debug:
+    msg: "{{ item }}"
+  with_items: "{{ kafka.topics }}"
+  tags: debug
+
+- name: Delete Topics, if they exist
+  command: >
+    {{ kafka.path_to_bin }}/kafka-topics.sh
+    --bootstrap-server {{ kafka.bootstrap_servers }}
+    --delete
+    --topic {{ item.topic_name }}
+    --if-exists
+  with_items: "{{ kafka.topics }}"
+
+- name: Create Topics
+  command: >
+    {{ kafka.path_to_bin }}/kafka-topics.sh
+    --bootstrap-server {{ kafka.bootstrap_servers }}
+    --create
+    --topic {{ item.topic_name }}
+    --replication-factor {{ item.replication }}
+    --partitions {{ item.partitions }}
+  with_items: "{{ kafka.topics }}"
+  tags:
+    - cleanup
+    - create

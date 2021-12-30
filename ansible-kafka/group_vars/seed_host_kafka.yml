@@ -1,0 +1,19 @@
+---
+
+kafka:
+  zookeeper_quorum: kafka1.192.168.31.41.nip.io:2181,kafka2.192.168.31.42.nip.io:2181,kafka3.192.168.31.43.nip.io:2181
+  bootstrap_servers: kafka1.192.168.31.41.nip.io:9092,kafka2.192.168.31.42.nip.io:9092,kafka3.192.168.31.43.nip.io:9092
+  path_to_bin: /opt/kafka/bin
+  topics:
+    - topic_name: ava-test1
+      replication: 3
+      partitions: 3
+
+    - topic_name: ava-test2
+      replication: 3
+      partitions: 3
+  test_topic:
+    topic_name: ava-event-test
+    replication: 1
+    partitions: 1
+

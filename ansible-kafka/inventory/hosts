@@ -6,6 +6,9 @@ kafka3.192.168.31.43.nip.io kafka_broker_id=3
 #
 # These are your zookeeper cluster nodes
 [zk_servers]
-kafka1.192.168.31.41.nip.io zk_id=1
-kafka2.192.168.31.42.nip.io zk_id=2
-kafka3.192.168.31.43.nip.io zk_id=3
+kafka1.192.168.31.41.nip.io zookeeper_id=1
+kafka2.192.168.31.42.nip.io zookeeper_id=2
+kafka3.192.168.31.43.nip.io zookeeper_id=3
+
+[seed_host_kafka]
+kafka1.192.168.31.41.nip.io
